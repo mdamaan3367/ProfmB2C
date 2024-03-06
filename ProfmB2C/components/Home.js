@@ -1,5 +1,5 @@
 import React, { useState, useCallback,useEffect } from "react";
-import { Text, StyleSheet, Image, View, Pressable,BackHandler, Modal, ScrollView,Dimensions,Button,TouchableOpacity, FlatList, TextInput  } from "react-native";
+import { Text, StyleSheet, Image, View, Pressable,BackHandler, Modal, ScrollView,Dimensions,Button,TouchableOpacity, FlatList, TextInput, RefreshControl  } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import ViewDetails6 from "./ViewDetails6";
 import ViewDetails5 from "./ViewDetails5";
@@ -16,7 +16,14 @@ import DiscountCarousal from "../screens/DiscountCarousal";
 import { isEnabled } from "react-native/Libraries/Performance/Systrace";
 import { Badge } from 'react-native-paper';
 import messaging from '@react-native-firebase/messaging';
-
+import { post,getWithToken } from '../Utils/WebServer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { selectData } from '../redux/dataSlice';
+import { makeApiRequest } from '../Utils/WebServer';
+import { useDispatch } from 'react-redux';
+import { setData } from '../redux/dataSlice';
 
 
 
@@ -171,6 +178,10 @@ const options = [
 
 const Home = () => {
 
+
+
+
+
   useEffect(() => {
     const backAction = () => {
       // Return true to prevent going back
@@ -229,6 +240,8 @@ const Home = () => {
   const [expanded2, setExpanded2] = useState(false);
   const [expanded3, setExpanded3] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [headToken,setHeadToken]=useState(null);
 
   const naviClean=()=>{
     navigation.navigate('OneTimeService')
@@ -325,6 +338,7 @@ const Home = () => {
 
 //push noti counter--
 const [notificationCount, setNotificationCount] = useState(0);
+const [tokenHeader, setTokenHeader] = useState(null);
 const check=async()=>{
 const fcmToken = await messaging().getToken();
 console.log(fcmToken)
@@ -376,13 +390,131 @@ useEffect(() => {
 // }, []);
 //push noti counter end--
 
+//call item api 3--
+const [token, setToken] = useState(null);
+useEffect(() => {
+  const fetchToken = async () => {
+    try {
+      const userInfoString = await AsyncStorage.getItem('userInfo');
+      if (userInfoString) {
+        const userInfo = JSON.parse(userInfoString);
+        const { token: userToken } = userInfo;
+        setToken(userToken);
+        console.log("setting")
+      }
+    } catch (error) {
+      console.error('Error fetching token:', error);
+    }
+  };
+
+  fetchToken();
+}, []);
+console.log(token)
+
+const [dataList, setDataList] = useState([]);
+const [userName1, setUserName1] = useState('');
 
 
+useEffect(() => {
+  const fetchservices = async () => {
+    try {
+      const userInfoServices = await AsyncStorage.getItem('dataServices');
+      if (userInfoServices) {
+        const userInfo = JSON.parse(userInfoServices);
+        
+        setDataList(userInfo);
+        console.log("setting")
+      }
+    } catch (error) {
+      console.error('Error fetching token:', error);
+    }
+  };
+
+ // fetchservices();
+}, []);
+const dispatch = useDispatch();
+
+const hitNotification = async () => {
+  try {
+    // Get the token from AsyncStorage
+    const userInfoString = await AsyncStorage.getItem('userInfo');
+    if (!userInfoString) {
+      throw new Error('User information not found');
+    }
+    const userInfo = JSON.parse(userInfoString);
+    const token2 = userInfo.token;
+    console.log(token2,"head")
+    setHeadToken(token2);
+    // Set the authorization header with the token value
+    console.log(userInfo.userName);
+    setUserName1(userInfo.userName)
+
+    // Make the GET request with axios including the authorization header
+    
+
+    // Handle response data if needed
+  } catch (error) {
+    console.error('Error:', error);
+    // Handle errors here
+  }
+};
+
+
+useEffect(() => {
+  hitNotification();
+}, []);
+//call 3 end
+const fetchData = () => {
+  
+  // Simulate fetching data from an API
+  setTimeout(() => {
+    //setData([1, 2, 3, 4, 5]);
+     //3 item start--
+      
+        // Example usage:
+        const url = 'https://hvserp.com/FomMobB2C/api/ServicePeriods/getAllActiveFomServicePeriodsForB2C';
+        const token = headToken; // Replace with the actual token
+        const method = 'GET'; // Specify the HTTP method (GET, POST, etc.)
+    
+        // Call the function
+        makeApiRequest(url, token, method)
+        .then(data => {
+          // Dispatch action to store the data in Redux
+          dispatch(setData(data));
+         // AsyncStorage.setItem('dataServices', JSON.stringify(data));
+          // Update state or do other operations with the response data
+        })
+        .catch(error => {
+          // Handle errors
+          console.error('Error:', error);
+        });
+    
+      //3 item end---
+   
+    setRefreshing(false);
+  }, 2000);
+};
+
+const dataServices = useSelector(selectData);
+ console.log(dataServices,"data from redux");
+ const onRefresh = () => {
+  setRefreshing(true);
+  fetchData();
+};
 
 
   return (
     <>
-    <ScrollView>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#006daa', '#80ccef']}
+            // Android offset for RefreshControl
+            progressViewOffset={100}
+          />
+        }>
       <View style={[styles.home,{ height:totalHeight+510,width:windowWidth}]}>
         <View style={styles.khaledAlQahtaniParent}>
           <Text style={[styles.khaledAlQahtani, styles.servicesTypo]}>
@@ -403,7 +535,8 @@ useEffect(() => {
           <TouchableOpacity
     style={[styles.frame, { position: 'absolute', top: 78, right:"4%", zIndex: 10 }]}
     onPress={() => {
-      navigation.navigate("Notifications");
+      navigation.navigate('Forget')
+     // navigation.navigate("NotificationScreen");
     }}
   >
   <View style={{top:6}}>
@@ -425,10 +558,51 @@ useEffect(() => {
           resizeMode="cover"
           source={require("../assets/profm-logo1-1-1-2.png")}
         />
+
+
+        
         <View style={[styles.frameParent, styles.homeChildPosition,{top: 400,}]}>
+        <FlatList
+  data={dataServices}
+  renderItem={({ item }) => (
+    <Pressable 
+      style={[styles.property1oneTimeService, ]}
+      onPress={() => handlePress(item)}
+    >
+      <View style={styles.property1oneTimeServiceChild} />
+      <View style={styles.oneTimeServiceParent}>
+        <Text style={[styles.oneTimeService, styles.oneTypo]}>
+          {item.title}
+        </Text>
+        <Text
+          style={[
+            styles.oneTimeHourlyReservation,
+            styles.oneTypo,
+          ]}
+        >
+          {item.description}
+        </Text>
+      </View>
+      
+      <Image
+        style={styles.property1oneTimeServiceItem}
+        resizeMode="cover"
+        source={{ uri: item.imageFullPath }}
+      />
+      <TouchableOpacity  style={styles.groupIconN} onPress={() => handlePress(item)}>
+        <Image
+          resizeMode="cover"
+          source={expanded2 ? require("../assets/group1Flip.png") : require("../assets/group1.png")}
+        />
+      </TouchableOpacity>
+    </Pressable>
+  )}
+  keyExtractor={(item, index) => index.toString()}
+/>
           {/* <YearlyServiceSection /> */}
-          
-          <Pressable
+          {/*3 items start */}
+
+        {/*  <Pressable
       style={[styles.property1oneTimeService, ]}
       onPress={handlePress}
     >
@@ -566,12 +740,12 @@ useEffect(() => {
         <Text style={styles.textD}>Carpentry</Text>
       </View>
       </TouchableOpacity>
-      {/* Repeat for remaining views */}
+      
     </View>
       )}
    </View>
    
-     {/* <YearlyServiceSection /> */}
+    
      <Pressable 
       style={[styles.property1oneTimeService, ]}
       onPress={handlePress2}
@@ -642,7 +816,7 @@ useEffect(() => {
    </View>
     
 
-      {/* <YearlyServiceSection /> */}
+     
       <Pressable
 
       
@@ -713,6 +887,8 @@ useEffect(() => {
     </View>
       )}
    </View>
+   */}
+      {/*3 items start end*/}
    
 
            {/* <YearlyServiceSection /> */}

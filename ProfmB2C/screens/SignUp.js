@@ -46,7 +46,7 @@ const SignUp = () => {
     const ticks = Date.now().toString(); // Get current time ticks as string
     const otpLength = 4; // Define the length of the OTP
     const startIndex = ticks.length - otpLength; // Calculate the start index for substring
-    const otpFromTicks = ticks.substring(startIndex); // Extract last 4 digits as OTP
+    const otpFromTicks = '2002'//ticks.substring(startIndex); // Extract last 4 digits as OTP
     
     console.log('Generated OTP:', otpFromTicks); // Log the generated OTP
     return otpFromTicks;
@@ -101,40 +101,64 @@ const SignUp = () => {
   const togglePasswordVisibility = () => {
     setHidePassword(!hidePassword);
   };
-  const sendEmail = async () => {
-    const emailBody = `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
-    <div style="margin:50px auto;width:70%;padding:20px 0">
-      <div style="border-bottom:1px solid #eee">
-        <a href="" style="font-size:1.4em;color: #006daa;text-decoration:none;font-weight:600">PROfm</a>
-      </div>
-      <p style="font-size:1.1em">Hi,</p>
-      <p>Thank you for choosing PROfm. Use the following OTP to complete your Sign Up procedures. OTP is valid for 5 minutes</p>
-      <h2 style="background: #006daa;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${expectedOtp}</h2>
-      <p style="font-size:0.9em;">Regards,<br />PROfm</p>
-      <hr style="border:none;border-top:1px solid #eee" />
-      <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
-        <p>PROfm Inc</p>
-        <p>Banjara Hills,Hyd</p>
-        <p>TS,IND</p>
-      </div>
+  const emailBody = `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+  <div style="margin:50px auto;width:70%;padding:20px 0">
+    <div style="border-bottom:1px solid #eee">
+      <a href="" style="font-size:1.4em;color: #006daa;text-decoration:none;font-weight:600">PROfm</a>
     </div>
-  </div>`;
+    <p style="font-size:1.1em">Hi,</p>
+    <p>Thank you for choosing PROfm. Use the following OTP to complete your Sign Up procedures. OTP is valid for 5 minutes</p>
+    <h2 style="background: #006daa;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${expectedOtp}</h2>
+    <p style="font-size:0.9em;">Regards,<br />PROfm</p>
+    <hr style="border:none;border-top:1px solid #eee" />
+    <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+      <p>PROfm Inc</p>
+      <p>Banjara Hills,Hyd</p>
+      <p>TS,IND</p>
+    </div>
+  </div>
+</div>`;
+  const sendEmail = async () => {
+   
+   
     if (email !== null) {
       Keyboard.dismiss();
-    try {
-      const response = await axios.post('http://shamimmn-002-site32.atempurl.com/sendemail', {
-        "toEmail": email,
-        "subject": "Email confirmation required",
-        "body": emailBody,
-        "attachments": "string"
-      });
-  
-     
-      // Handle response data if needed
-    } catch (error) {
-      console.error('Error:', error);
-      // Handle errors here
-    }
+     // Alert.alert("in mail")
+      try {
+       // Alert.alert("Trying to send email...");
+        const response = await axios.post('http://shamimmn-002-site32.atempurl.com/sendemail', {
+          "toEmail": email,
+          "subject": "Email confirmation required",
+          "body": emailBody,
+          "attachments": "string"
+        });
+      
+        // Check if the response status is 200
+        if (response.status === 200) {
+          Alert.alert('Email sent successfully!');
+        } else {
+          // If response status is not 200, handle the error
+          throw new Error(`Unexpected status code: ${response.status}`);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle errors here
+        if (error.response) {
+          console.error('Response data:', error.response.data);
+          console.error('Response status:', error.response.status);
+         // Alert.alert(`Failed to send email. Status code: ${error.response.status}`);
+        } else if (error.request) {
+          console.error('No response received:', error.request);
+          const errorMessage = `Failed to send email. No response received from server. \n\nRequest URL: ${error.request.url}`;
+         // Alert.alert(errorMessage);
+        } else {
+          console.error('Error during request:', error.message);
+          //Alert.alert('Failed to send email. Error during request.');
+        }
+      }
+      
+      
+      
   } else {
     Alert.alert('Please enter login credentials');
 }

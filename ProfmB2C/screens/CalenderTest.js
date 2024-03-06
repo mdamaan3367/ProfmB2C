@@ -91,9 +91,8 @@ export default function App() {
                         style={[
                           styles.item,
                           isActive && {
-                            backgroundColor: '#006daa',
-                            borderColor: '#006daa',
-                            borderRadius:16,
+                            backgroundColor: '#111',
+                            borderColor: '#111',
                           },
                         ]}>
                         <Text

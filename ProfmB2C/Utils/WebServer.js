@@ -37,10 +37,39 @@ export const post = async (url, data, headers) => {
 // Add other HTTP methods as needed (e.g., PUT, DELETE, etc.)
 
 export const getWithToken = async (url, token) => {
+    console.log(token,"debug")
     const headers = {
         Authorization: `Bearer ${token}`,
     };
     return await get(url, headers);
 };
+
+export const makeApiRequest = async (url, token, method) => {
+    try {
+      // Set the authorization header with the token value
+      const headers = {
+        Authorization: token,
+      };
+  
+      // Make the request based on the method
+      let response;
+      if (method === 'GET') {
+        response = await axios.get(url, { headers });
+      } else if (method === 'POST') {
+        // Example for POST method, you can extend it for other methods
+        // const requestBody = { key: 'value' }; // Add your request body if needed
+        // response = await axios.post(url, requestBody, { headers });
+        // Example end
+      }
+      
+      // Handle response data if needed
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error:', error);
+      // Handle errors here
+      throw error; // Re-throwing the error to be caught by the caller
+    }
+  };
 
 // You can also create similar functions for other HTTP methods with a token in the header

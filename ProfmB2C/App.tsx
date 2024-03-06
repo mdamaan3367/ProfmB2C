@@ -36,12 +36,17 @@ import Orders from './screens/Orders';
 import AboutApp from './screens/AboutApp';
 import Menu1 from './screens/Menu1';
 import messaging from '@react-native-firebase/messaging';
+import { Provider } from 'react-redux';
+import store, { persistor } from './redux/store';
+import NotificationScreen from './redux/NotificationScreen';
+import { addNotification } from './redux/notificationSlice';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const Stack = createNativeStackNavigator();
 const App = () => {
 
   //pushed
-useEffect(() => {
+ useEffect(() => {
   const unsubscribe = messaging().onMessage(async remoteMessage => {
     console.log(remoteMessage.notification)
     Alert.alert(remoteMessage.notification?.title, remoteMessage.notification?.body);
@@ -49,9 +54,30 @@ useEffect(() => {
 
   return unsubscribe;
 }, []);
+//-----------
+useEffect(() => {
+  const unsubscribeForeground = messaging().onMessage(async (remoteMessage) => {
+    const { title, body } = remoteMessage.notification;
+    const notificationText = `${title}: ${body}`;
+    store.dispatch(addNotification(notificationText));
+  });
+
+  const unsubscribeBackground = messaging().onNotificationOpenedApp(remoteMessage => {
+    const { title, body } = remoteMessage.notification;
+    const notificationText = `${title}: ${body}`;
+    store.dispatch(addNotification(notificationText));
+  });
+
+  return () => {
+    unsubscribeForeground();
+    unsubscribeBackground();
+  };
+}, []);
 //pushed
  
   return (
+    <Provider store={store}>
+     <PersistGate loading={null} persistor={persistor}>
     <NavigationContainer>
        <Stack.Navigator screenOptions={{ headerShown: false }}>
        <Stack.Screen
@@ -220,10 +246,12 @@ useEffect(() => {
               component={Menu1}
               options={{ headerShown: false }}
             />
-            
+             <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
          </Stack.Navigator>
 
     </NavigationContainer>
+    </PersistGate>
+    </Provider>
   )
 }
 

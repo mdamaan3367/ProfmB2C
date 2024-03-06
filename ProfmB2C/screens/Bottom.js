@@ -17,7 +17,7 @@ const Bottom = () => {
 
   return (
    <>
-    <Bottom2.Navigator>
+    <Bottom2.Navigator initialRouteName='Home'>
       <Bottom2.Screen 
     name='Home' 
     component={props => <Home/>} // Pass openDrawer function to Home component

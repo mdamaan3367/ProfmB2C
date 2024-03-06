@@ -6,9 +6,14 @@ import Property1Default1 from "../components/Property1Default1";
 import { FontFamily, FontSize, Color, Border } from "../GlobalStyles";
 import { post } from '../Utils/WebServer';
 import messaging from '@react-native-firebase/messaging';
-
+import store from '../redux/store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { makeApiRequest } from '../Utils/WebServer';
+import { useDispatch } from 'react-redux';
+import { setData } from '../redux/dataSlice';
+
+
 
 const LogIn = ({ route }) => {
   const navigation = useNavigation();
@@ -16,6 +21,9 @@ const LogIn = ({ route }) => {
   const [password, setPassword] = useState(null);
   const [hidePassword, setHidePassword] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [dataList, setDataList] = useState([]);
+
+  const dispatch = useDispatch();
   
   const [fcmToken, setFcmToken] = useState('');
   const windowHeight = Dimensions.get('window').height;
@@ -85,6 +93,28 @@ const loginCallback = response => {
             hitNotification();
             setEmail('');
             setPassword('');
+            console.log(userInfo.token)
+               //3 item start--
+      
+        // Example usage:
+        const url = 'https://hvserp.com/FomMobB2C/api/ServicePeriods/getAllActiveFomServicePeriodsForB2C';
+        const token = userInfo.token; // Replace with the actual token
+        const method = 'GET'; // Specify the HTTP method (GET, POST, etc.)
+    
+        // Call the function
+        makeApiRequest(url, token, method)
+        .then(data => {
+          // Dispatch action to store the data in Redux
+          dispatch(setData(data));
+         // AsyncStorage.setItem('dataServices', JSON.stringify(data));
+          // Update state or do other operations with the response data
+        })
+        .catch(error => {
+          // Handle errors
+          console.error('Error:', error);
+        });
+    
+      //3 item end---
             navigation.navigate('Bottom');
         } catch (error) {
             console.error('AsyncStorage Error:', error);
@@ -118,6 +148,7 @@ const checkLoginDetails = async () => {
     let userInfo =await AsyncStorage.getItem('userInfo');
     if (userInfo !== null && userInfo !== undefined) {
       AsyncStorage.setItem('isAlreadyLoggedIn', 'true');
+   
       // navigation.navigate("Bottom");
     }else{
       AsyncStorage.setItem('isAlreadyLoggedIn', 'false');
@@ -273,7 +304,7 @@ useEffect(() => {
             source={require("../assets/group-238655.png")}
           />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity >
           <Image
             style={[styles.frameChild8, styles.groupIconLayout]}
             resizeMode="cover"
