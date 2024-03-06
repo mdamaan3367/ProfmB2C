@@ -66,7 +66,7 @@ const FacadeCleaning = () => {
             <Text style={styles.blankLine}> </Text>
           </Text>
           <Text style={[styles.facadeCleaning1, styles.cleaningFlexBox]}>
-            Facade cleaning2
+            Facade cleanings
           </Text>
           <Pressable
             style={[styles.frameParent, styles.groupChildPosition]}
