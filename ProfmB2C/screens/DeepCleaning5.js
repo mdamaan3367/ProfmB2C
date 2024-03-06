@@ -140,7 +140,7 @@ const DeepCleaning5 = () => {
             <Text style={styles.blankLine}> </Text>
           </Text>
           <Text style={[styles.deepCleaning1, styles.detailsTypo]}>
-            deep cleaning2
+            deep cleaning
           </Text>
           <Pressable
             style={[styles.frameParent, styles.groupChildPosition]}
