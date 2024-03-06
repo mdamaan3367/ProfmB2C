@@ -139,7 +139,8 @@ const DeepCleaning5 = () => {
 `}</Text>
             <Text style={styles.blankLine}> </Text>
           </Text>
-          <Text style={[styles.deepCleaning1, styles.detailsTypo]}>
+          <Text style={[styles.deepCleaning1, styles.detailsTypo]}>     
+          
             deep cleaning2
           </Text>
           <Pressable
