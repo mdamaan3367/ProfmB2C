@@ -1,13 +1,25 @@
 import React, {useContext, useState, useEffect} from 'react';
-import { StyleSheet, View, Image, Pressable, Text, ScrollView ,Alert,Dimensions, TextInput, TouchableOpacity, Keyboard} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import Property1Default from "../components/Property1Default";
-import FormContainer from "../components/FormContainer";
-import PasswordSection from "../components/PasswordSection";
-import ConfirmPasswordForm from "../components/ConfirmPasswordForm";
-import { Color, Border, FontSize, FontFamily } from "../GlobalStyles";
-import { Button, Modal, RadioButton } from 'react-native-paper';
-import { post } from '../Utils/WebServer';
+import {
+  StyleSheet,
+  View,
+  Image,
+  Pressable,
+  Text,
+  ScrollView,
+  Alert,
+  Dimensions,
+  TextInput,
+  TouchableOpacity,
+  Keyboard,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import Property1Default from '../components/Property1Default';
+import FormContainer from '../components/FormContainer';
+import PasswordSection from '../components/PasswordSection';
+import ConfirmPasswordForm from '../components/ConfirmPasswordForm';
+import {Color, Border, FontSize, FontFamily} from '../GlobalStyles';
+import {Button, Modal, RadioButton} from 'react-native-paper';
+import {post} from '../Utils/WebServer';
 import axios from 'axios';
 
 const SignUp = () => {
@@ -16,10 +28,10 @@ const SignUp = () => {
 
   const [hidePassword, setHidePassword] = useState(true);
   const [value, setValue] = useState('first');
-  const [fName, setFName] =useState(null);
-  const [lName, setLName] =useState(null);
-  const [mobile, setMobile] =useState(null);
-  const [email, setEmail] =useState(null);
+  const [fName, setFName] = useState(null);
+  const [lName, setLName] = useState(null);
+  const [mobile, setMobile] = useState(null);
+  const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [cpassword, setCPassword] = useState(null);
   const [otpInput, setOtpInput] = useState('');
@@ -46,19 +58,19 @@ const SignUp = () => {
     const ticks = Date.now().toString(); // Get current time ticks as string
     const otpLength = 4; // Define the length of the OTP
     const startIndex = ticks.length - otpLength; // Calculate the start index for substring
-    const otpFromTicks = '2002'//ticks.substring(startIndex); // Extract last 4 digits as OTP
-    
+    const otpFromTicks = '2002'; //ticks.substring(startIndex); // Extract last 4 digits as OTP
+
     console.log('Generated OTP:', otpFromTicks); // Log the generated OTP
     return otpFromTicks;
-  };
+  }
   function generateOtpFromTicksMob() {
     const ticks = Date.now().toString(); // Get current time ticks as string
     const otpLength = 4; // Define the length of the OTP
     const startIndex = ticks.length - otpLength; // Calculate the start index for substring
-    const otpFromTicks = '2002'//ticks.substring(startIndex); // Extract last 4 digits as OTP
+    const otpFromTicks = '2002'; //ticks.substring(startIndex); // Extract last 4 digits as OTP
     console.log('Generated OTP:', otpFromTicks); // Log the generated OTP
     return otpFromTicks;
-  };
+  }
 
   const handleValidate = () => {
     if (otpInput === expectedOtp) {
@@ -72,9 +84,11 @@ const SignUp = () => {
       // If OTP doesn't match, show an alert
       setIsValidOtp(false);
       setModalVisible(false);
-      Alert.alert('Invalid OTP', 'The entered OTP does not match. Please try again.', [
-        { text: 'OK', onPress: () => setIsValidOtp(true) }
-      ]);
+      Alert.alert(
+        'Invalid OTP',
+        'The entered OTP does not match. Please try again.',
+        [{text: 'OK', onPress: () => setIsValidOtp(true)}],
+      );
     }
   };
 
@@ -91,9 +105,11 @@ const SignUp = () => {
       // If OTP doesn't match, show an alert
       setIsValidOtpMob(false);
       setModalVisibleMob(false);
-      Alert.alert('Invalid OTP', 'The entered OTP does not match. Please try again.', [
-        { text: 'OK', onPress: () => setIsValidOtpMob(true) }
-      ]);
+      Alert.alert(
+        'Invalid OTP',
+        'The entered OTP does not match. Please try again.',
+        [{text: 'OK', onPress: () => setIsValidOtpMob(true)}],
+      );
     }
   };
   //mob
@@ -119,20 +135,21 @@ const SignUp = () => {
   </div>
 </div>`;
   const sendEmail = async () => {
-   
-   
     if (email !== null) {
       Keyboard.dismiss();
-     // Alert.alert("in mail")
+      // Alert.alert("in mail")
       try {
-       // Alert.alert("Trying to send email...");
-        const response = await axios.post('http://shamimmn-002-site32.atempurl.com/sendemail', {
-          "toEmail": email,
-          "subject": "Email confirmation required",
-          "body": emailBody,
-          "attachments": "string"
-        });
-      
+        // Alert.alert("Trying to send email...");
+        const response = await axios.post(
+          'http://shamimmn-002-site32.atempurl.com/sendemail',
+          {
+            toEmail: email,
+            subject: 'Email confirmation required',
+            body: emailBody,
+            attachments: 'string',
+          },
+        );
+
         // Check if the response status is 200
         if (response.status === 200) {
           Alert.alert('Email sent successfully!');
@@ -146,137 +163,157 @@ const SignUp = () => {
         if (error.response) {
           console.error('Response data:', error.response.data);
           console.error('Response status:', error.response.status);
-         // Alert.alert(`Failed to send email. Status code: ${error.response.status}`);
+          // Alert.alert(`Failed to send email. Status code: ${error.response.status}`);
         } else if (error.request) {
           console.error('No response received:', error.request);
           const errorMessage = `Failed to send email. No response received from server. \n\nRequest URL: ${error.request.url}`;
-         // Alert.alert(errorMessage);
+          // Alert.alert(errorMessage);
         } else {
           console.error('Error during request:', error.message);
           //Alert.alert('Failed to send email. Error during request.');
         }
       }
-      
-      
-      
-  } else {
-    Alert.alert('Please enter login credentials');
-}
+    } else {
+      Alert.alert('Please enter login credentials');
+    }
   };
 
   return (
     <>
-    <ScrollView scrollEnabled={true}>
-    <View style={[{height:windowHeight+100,backgroundColor: Color.colorGray_100,
-    flex: 1,}, styles.iconLayout]}>
-      <View style={styles.rectangleParent}>
-        <View style={[styles.groupChild, styles.groupShadowBox]} />
-        <View style={[styles.rectangleGroup, styles.groupLayout]}>
-          <View style={[styles.groupItem, styles.groupLayout]} />
-          <Image
-            style={[styles.profmLogo1111, styles.profmLogo1111Position]}
-            resizeMode="cover"
-            source={require("../assets/profm-logo1-1-1-11.png")}
+      <ScrollView scrollEnabled={true}>
+        <View
+          style={[
+            {
+              height: windowHeight+100,
+              backgroundColor: Color.colorGray_100,
+              flex: 1,
+            },
+            styles.iconLayout,
+          ]}>
+          <View style={styles.rectangleParent}>
+            <View style={[styles.groupChild, styles.groupShadowBox]} />
+            <View style={[styles.rectangleGroup, styles.groupLayout]}>
+              <View style={[styles.groupItem, styles.groupLayout]} />
+              <Image
+                style={[styles.profmLogo1111, styles.profmLogo1111Position]}
+                resizeMode="cover"
+                source={require('../assets/3-1-1.png')}
+              />
+            </View>
+            <Pressable
+              style={styles.arrow21}
+              onPress={() => navigation.goBack()}>
+              <Image
+                style={[styles.icon, styles.iconLayout]}
+                resizeMode="cover"
+                source={require('../assets/arrow-2-11.png')}
+              />
+            </Pressable>
+            <Text style={styles.signUp1}>Sign up</Text>
+          </View>
+          <View style={styles.container}>
+            <RadioButton.Group
+              onValueChange={newValue => setValue(newValue)}
+              value={value}>
+              <View style={styles.radioGroup}>
+                <RadioButton.Item
+                  label="Individual"
+                  value="first"
+                  color="#006daa"
+                  labelStyle={{color: Color.colorDarkgray_100}}
+                />
+                <RadioButton.Item
+                  label="Micro Organization"
+                  value="second"
+                  color="#006daa"
+                  labelStyle={{color: Color.colorDarkgray_100}}
+                />
+              </View>
+            </RadioButton.Group>
+          </View>
+          <Property1Default
+            logIn="sign up"
+            property1DefaultPosition="absolute"
+            property1DefaultMarginLeft={'2%'}
+            property1DefaultTop={'81.2%'}
+            property1DefaultLeft="3%"
+            property1DefaultWidth={'92%'}
+            property1DefaultHeight={48}
+            property1DefaultRight="unset"
+            property1DefaultBottom="unset"
+            logInLetterSpacing={0.6}
+            logInLineHeight={26}
+            logInTextTransform="capitalize"
+            logInWidth="58.31%"
+            logInLeft="20.7%"
+            onButtonBigPress={() => navigation.navigate('Forget')}
+            disabled={!emailVerify || !mobileVerify}
           />
-        </View>
-        <Pressable style={styles.arrow21} onPress={() => navigation.goBack()}>
-          <Image
-            style={[styles.icon, styles.iconLayout]}
-            resizeMode="cover"
-            source={require("../assets/arrow-2-11.png")}
-          />
-        </Pressable>
-        <Text style={styles.signUp1}>Sign up</Text>
-      </View>
-      <View style={styles.container}>
-      <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
-        <View style={styles.radioGroup}>
-          <RadioButton.Item label="Individual" value="first" color="#006daa" labelStyle={{color:Color.colorDarkgray_100}}/>
-          <RadioButton.Item label="Micro Organization" value="second" color="#006daa"  labelStyle={{color:Color.colorDarkgray_100}}/>
-        </View>
-      </RadioButton.Group>
-      </View>
-      <Property1Default
-        logIn="sign up"
-        property1DefaultPosition="absolute"
-        property1DefaultMarginLeft={"2%"}
-        property1DefaultTop={"81.2%"}
-        property1DefaultLeft="3%"
-        property1DefaultWidth={"92%"}
-        property1DefaultHeight={48}
-        property1DefaultRight="unset"
-        property1DefaultBottom="unset"
-        logInLetterSpacing={0.6}
-        logInLineHeight={26}
-        logInTextTransform="capitalize"
-        logInWidth="58.31%"
-        logInLeft="20.7%"
-        onButtonBigPress={() => navigation.navigate("Forget")}
-        disabled={!emailVerify || !mobileVerify}
-      />
-      <View style={styles.frameParent}>
-        <View style={styles.frameGroup}>
-          {/* <FormContainer fullName="First name" personName="Assem" />
+          <View style={styles.frameParent}>
+            <View style={styles.frameGroup}>
+              {/* <FormContainer fullName="First name" personName="Assem" />
           <FormContainer
             fullName="Last name"
             personName="Emara"
             propWidth={"30%"}
             propMarginLeft={"30%"}
           /> */}
-          <View style={styles.mobileParent}>
-          <Text style={[styles.passwordN, styles.passwordTypo]}>First name</Text>
-          <View style={styles.rectangleParentN}>
-            <View style={styles.frameShadowBoxN} />
-            <View style={[styles.frameGroupN, styles.frameGroupPositionN]}>
-               <View style={styles.lockParentN}>
-                <Image
-                  style={styles.iconLayoutN}
-                  resizeMode="cover"
-                  source={require("../assets/profile.png")}
-                />
-                <TextInput  value={fName}
-            placeholder="Amaan"
-            placeholderTextColor="#D3D3D3"
-            onChangeText={text => setFName(text)}
-            style={{color:"black", padding: 10, marginTop: '2%'}}/>
-              
+              <View style={styles.mobileParent}>
+                <Text style={[styles.passwordN, styles.passwordTypo]}>
+                  First name
+                </Text>
+                <View style={styles.rectangleParentN}>
+                  <View style={styles.frameShadowBoxN} />
+                  <View
+                    style={[styles.frameGroupN, styles.frameGroupPositionN]}>
+                    <View style={styles.lockParentN}>
+                      <Image
+                        style={styles.iconLayoutN}
+                        resizeMode="cover"
+                        source={require('../assets/profile.png')}
+                      />
+                      <TextInput
+                        value={fName}
+                        placeholder="Amaan"
+                        placeholderTextColor="#D3D3D3"
+                        onChangeText={text => setFName(text)}
+                        style={{color: 'black', padding: 10, marginTop: '2%'}}
+                      />
+                    </View>
+                  </View>
+                </View>
               </View>
-             
-            </View>
-            
-          </View>
-        </View>
-        {/* */}
-        <View style={styles.mobileParent}>
-       
-          <Text style={[styles.passwordN2, styles.passwordTypo]}>Last name</Text>
-          <View style={styles.rectangleParentN}>
-            <View style={styles.frameShadowBoxN2} />
-            <View style={[styles.frameGroupN2, styles.frameGroupPositionN2]}>
-               <View style={styles.lockParentN}>
-                <Image
-                  style={styles.iconLayoutN}
-                  resizeMode="cover"
-                  source={require("../assets/profile.png")}
-                />
-                <TextInput  value={lName}
-            placeholder="mohammed"
-            placeholderTextColor="#D3D3D3"
-            onChangeText={text => setLName(text)}
-            style={{color:"black", padding: 10, marginTop: '2%'}}/>
-              
+              {/* */}
+              <View style={styles.mobileParent}>
+                <Text style={[styles.passwordN2, styles.passwordTypo]}>
+                  Last name
+                </Text>
+                <View style={styles.rectangleParentN}>
+                  <View style={styles.frameShadowBoxN2} />
+                  <View
+                    style={[styles.frameGroupN2, styles.frameGroupPositionN2]}>
+                    <View style={styles.lockParentN}>
+                      <Image
+                        style={styles.iconLayoutN}
+                        resizeMode="cover"
+                        source={require('../assets/profile.png')}
+                      />
+                      <TextInput
+                        value={lName}
+                        placeholder="mohammed"
+                        placeholderTextColor="#D3D3D3"
+                        onChangeText={text => setLName(text)}
+                        style={{color: 'black', padding: 10, marginTop: '2%'}}
+                      />
+                    </View>
+                  </View>
+                </View>
               </View>
-             
+              {/* */}
             </View>
-            
-          </View>
-       
-        </View>
-        {/* */}
-        </View>
-        
-        {/*mobile */}
-        {/* <View style={styles.mobileParent}>
+
+            {/*mobile */}
+            {/* <View style={styles.mobileParent}>
           <Text style={styles.mobile}>{`Mobile `}</Text>
           <View style={styles.rectangleContainer}>
             <View style={styles.frameShadowBox} />
@@ -293,50 +330,48 @@ const SignUp = () => {
           </View>
         </View> */}
 
-        <View style={styles.mobileParent}>
-       
-          <Text style={[styles.passwordN3, styles.passwordTypo]}>Mobile</Text>
-          <View style={styles.rectangleParentN}>
-            <View style={styles.frameShadowBoxN3} />
-            <View style={[styles.frameGroupN3, styles.frameGroupPositionN3]}>
-               <View style={styles.lockParentN}>
-                <Image
-                  style={styles.iconLayoutN}
-                  resizeMode="cover"
-                  source={require("../assets/vuesaxoutlinecall1.png")}
-                />
-                <TextInput value={mobile}
-            placeholder="+966 500891756"
-            placeholderTextColor="#D3D3D3"
-            maxLength={14}
-            keyboardType="numeric"
-            onChangeText={text => setMobile(text)}
-            style={{color:"black", padding: 10, marginTop: '2%'}}/>
-              
+            <View style={styles.mobileParent}>
+              <Text style={[styles.passwordN3, styles.passwordTypo]}>
+                Mobile
+              </Text>
+              <View style={styles.rectangleParentN}>
+                <View style={styles.frameShadowBoxN3} />
+                <View
+                  style={[styles.frameGroupN3, styles.frameGroupPositionN3]}>
+                  <View style={styles.lockParentN}>
+                    <Image
+                      style={styles.iconLayoutN}
+                      resizeMode="cover"
+                      source={require('../assets/vuesaxoutlinecall1.png')}
+                    />
+                    <TextInput
+                      value={mobile}
+                      placeholder="+966 500891756"
+                      placeholderTextColor="#D3D3D3"
+                      maxLength={14}
+                      keyboardType="numeric"
+                      onChangeText={text => setMobile(text)}
+                      style={{color: 'black', padding: 10, marginTop: '2%'}}
+                    />
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisibleMob(true);
+                    }}
+                    style={{position: 'absolute', right: '-107%', top: '20%'}}>
+                    {mobileVerify ? (
+                      <Text style={{color: 'green'}}>Verified</Text>
+                    ) : (
+                      <Text style={{color: 'red'}}>Verify</Text>
+                    )}
+                  </TouchableOpacity>
+                </View>
               </View>
-              <TouchableOpacity onPress={() =>{
-                 setModalVisibleMob(true)
-                 
-              }} style={{ position: "absolute", right: "-107%", top: "20%" }}>
-  {mobileVerify ? (
-    <Text style={{ color: "green" }}>Verified</Text>
-  ) : (
-    <Text style={{ color: "red" }}>Verify</Text>
-  )}
-</TouchableOpacity>
-             
             </View>
-            
-          </View>
-       
-        </View>
 
-
-
-
-        {/*mobile */}
-        {/*mail */}
-        {/* <View style={styles.mobileParent}>
+            {/*mobile */}
+            {/*mail */}
+            {/* <View style={styles.mobileParent}>
        
           <Text style={styles.mobile}>Email</Text>
           <View style={styles.rectangleContainer}>
@@ -353,118 +388,117 @@ const SignUp = () => {
           </View>
         </View> */}
 
-
-        <View style={styles.mobileParent}>
-       
-          <Text style={[styles.passwordN3, styles.passwordTypo]}>Email</Text>
-          <View style={styles.rectangleParentN}>
-            <View style={styles.frameShadowBoxN3} />
-            <View style={[styles.frameGroupN3, styles.frameGroupPositionN3]}>
-               <View style={styles.lockParentN}>
-                <Image
-                  style={styles.iconLayoutN}
-                  resizeMode="cover"
-                  source={require("../assets/sms.png")}
-                />
-                <TextInput value={email}
-            placeholder="Logicsystems@gmail.com"
-            placeholderTextColor="#D3D3D3"
-            maxLength={35}
-            onChangeText={text => setEmail(text)}
-            style={{color:"black", padding: 10, marginTop: '2%'}}/>
-              
+            <View style={styles.mobileParent}>
+              <Text style={[styles.passwordN3, styles.passwordTypo]}>
+                Email
+              </Text>
+              <View style={styles.rectangleParentN}>
+                <View style={styles.frameShadowBoxN3} />
+                <View
+                  style={[styles.frameGroupN3, styles.frameGroupPositionN3]}>
+                  <View style={styles.lockParentN}>
+                    <Image
+                      style={styles.iconLayoutN}
+                      resizeMode="cover"
+                      source={require('../assets/sms.png')}
+                    />
+                    <TextInput
+                      value={email}
+                      placeholder="Logicsystems@gmail.com"
+                      placeholderTextColor="#D3D3D3"
+                      maxLength={35}
+                      onChangeText={text => setEmail(text)}
+                      style={{color: 'black', padding: 10, marginTop: '2%'}}
+                    />
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisible(true);
+                      sendEmail();
+                    }}
+                    style={{position: 'absolute', right: '-50%', top: '20%'}}>
+                    {emailVerify ? (
+                      <Text style={{color: 'green'}}>Verified</Text>
+                    ) : (
+                      <Text style={{color: 'red'}}>Verify</Text>
+                    )}
+                  </TouchableOpacity>
+                </View>
               </View>
-              <TouchableOpacity onPress={() => {
-                setModalVisible(true)
-                sendEmail();
-                }} style={{ position: "absolute", right: "-50%", top: "20%" }}>
-  {emailVerify ? (
-    <Text style={{ color: "green" }}>Verified</Text>
-  ) : (
-    <Text style={{ color: "red" }}>Verify</Text>
-  )}
-</TouchableOpacity>
-             
             </View>
-            
-          </View>
-       
-        </View>
 
-         {/*mail */}
-         {/*pass */}
+            {/*mail */}
+            {/*pass */}
 
-         <View style={styles.mobileParent}>
-       
-          <Text style={[styles.passwordN3, styles.passwordTypo]}>Password</Text>
-          <View style={styles.rectangleParentN}>
-            <View style={styles.frameShadowBoxN3} />
-            <View style={[styles.frameGroupN3, styles.frameGroupPositionN3]}>
-               <View style={styles.lockParentN}>
-                <Image
-                  style={styles.iconLayoutN}
-                  resizeMode="cover"
-                  source={require("../assets/lock1.png")}
-                />
-                <TextInput  value={password}
-            placeholder="*************"
-            placeholderTextColor="#D3D3D3"
-            maxLength={12}
-            secureTextEntry
-            onChangeText={text => setPassword(text)}
-            style={{color:"black", padding: 10, marginTop: '2%'}}/>
-              
+            <View style={styles.mobileParent}>
+              <Text style={[styles.passwordN3, styles.passwordTypo]}>
+                Password
+              </Text>
+              <View style={styles.rectangleParentN}>
+                <View style={styles.frameShadowBoxN3} />
+                <View
+                  style={[styles.frameGroupN3, styles.frameGroupPositionN3]}>
+                  <View style={styles.lockParentN}>
+                    <Image
+                      style={styles.iconLayoutN}
+                      resizeMode="cover"
+                      source={require('../assets/lock1.png')}
+                    />
+                    <TextInput
+                      value={password}
+                      placeholder="*************"
+                      placeholderTextColor="#D3D3D3"
+                      maxLength={12}
+                      secureTextEntry
+                      onChangeText={text => setPassword(text)}
+                      style={{color: 'black', padding: 10, marginTop: '2%'}}
+                    />
+                  </View>
+                </View>
               </View>
-             
             </View>
-            
-          </View>
-       
-        </View>
 
-          {/*pass */}
-          {/*passC */}
-          <View style={styles.mobileParent}>
-       
-          <Text style={[styles.passwordN3, styles.passwordTypo]}>Confirm Password</Text>
-          <View style={styles.rectangleParentN}>
-            <View style={styles.frameShadowBoxN3} />
-            <View style={[styles.frameGroupN3, styles.frameGroupPositionN3]}>
-               <View style={styles.lockParentN}>
-
-                <Image
-                  style={styles.iconLayoutN}
-                  resizeMode="cover"
-                  source={require("../assets/lock1.png")}
-                />
-                <TextInput value={cpassword}
-            placeholder="*************"
-            placeholderTextColor="#D3D3D3"
-            maxLength={12}
-            secureTextEntry={hidePassword}
-            onChangeText={text => setCPassword(text)}
-            style={{color:"black", padding: 10, marginTop: '2%'}}/>
-           <TouchableOpacity >
-              <Image
-          style={[styles.eyeSlashIcon, styles.iconLayoutN]}
-          resizeMode="cover"
-          source={require("../assets/eyeslash1.png")}
-        />
-        </TouchableOpacity>
-       
+            {/*pass */}
+            {/*passC */}
+            <View style={styles.mobileParent}>
+              <Text style={[styles.passwordN3, styles.passwordTypo]}>
+                Confirm Password
+              </Text>
+              <View style={styles.rectangleParentN}>
+                <View style={styles.frameShadowBoxN3} />
+                <View
+                  style={[styles.frameGroupN3, styles.frameGroupPositionN3]}>
+                  <View style={styles.lockParentN}>
+                    <Image
+                      style={styles.iconLayoutN}
+                      resizeMode="cover"
+                      source={require('../assets/lock1.png')}
+                    />
+                    <TextInput
+                      value={cpassword}
+                      placeholder="*************"
+                      placeholderTextColor="#D3D3D3"
+                      maxLength={12}
+                      secureTextEntry={hidePassword}
+                      onChangeText={text => setCPassword(text)}
+                      style={{color: 'black', padding: 10, marginTop: '2%'}}
+                    />
+                    <TouchableOpacity onPress={() => navigation.navigate('RegularCleaning')}>
+                      <Image
+                        style={[styles.eyeSlashIcon, styles.iconLayoutN]}
+                        resizeMode="cover"
+                        source={require('../assets/eyeslash1.png')}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
-             
             </View>
-            
+            {/*passC */}
+            {/* <PasswordSection /> */}
+            {/* <ConfirmPasswordForm /> */}
           </View>
-       
-        </View>
-          {/*passC */}
-        {/* <PasswordSection /> */}
-        {/* <ConfirmPasswordForm /> */}
-        
-      </View>
-      {/* <View style={[styles.frameContainer, styles.profmLogo1111Position]}>
+          {/* <View style={[styles.frameContainer, styles.profmLogo1111Position]}>
         <View style={styles.lineParent}>
           <View style={[styles.frameInner, styles.lineViewBorder]} />
           <Text style={styles.orSignUp}>or sign up with</Text>
@@ -488,70 +522,122 @@ const SignUp = () => {
           />
         </View>
       </View> */}
-     
-    </View>
-    </ScrollView>
-    <Modal
+        </View>
+      </ScrollView>
+      <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisibleMob}
-        onRequestClose={() => setModalVisibleMob(false)}
-      >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', zIndex: 9999 }}>
-          <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', position: 'absolute', width: '100%', height: '100%', zIndex: 9998, pointerEvents: 'none' }} />
-          <View style={{ backgroundColor: 'white', width: 300, height: 200, borderRadius: 10, padding: 20, justifyContent: 'center', alignItems: 'center', zIndex: 9999 }}>
-            <Text style={{ fontSize: 18, marginBottom: 10,color:"gray" }}>Verify OTP</Text>
-            
+        onRequestClose={() => setModalVisibleMob(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 9999,
+          }}>
+          <View
+            style={{
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              zIndex: 9998,
+              pointerEvents: 'none',
+            }}
+          />
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: 300,
+              height: 200,
+              borderRadius: 10,
+              padding: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 9999,
+            }}>
+            <Text style={{fontSize: 18, marginBottom: 10, color: 'gray'}}>
+              Verify OTP
+            </Text>
+
             <TextInput
               style={[styles.input, !isValidOtp && styles.invalidInput]}
               placeholder="Enter OTP Recieved on Mobile"
               placeholderTextColor="gray"
-              onChangeText={(text) => setOtpInputMob(text)}
+              onChangeText={text => setOtpInputMob(text)}
               value={otpInputMob}
               keyboardType="numeric"
             />
-          
-            <TouchableOpacity onPress={handleValidateMob} style={{ marginTop: 10 }}>
-              <Text style={{ fontSize: 16, color: 'red',  }}>Validate</Text>
+
+            <TouchableOpacity
+              onPress={handleValidateMob}
+              style={{marginTop: 10}}>
+              <Text style={{fontSize: 16, color: 'red'}}>Validate</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-       <Modal
+      <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', zIndex: 9999 }}>
-          <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', position: 'absolute', width: '100%', height: '100%', zIndex: 9998, pointerEvents: 'none' }} />
-          <View style={{ backgroundColor: 'white', width: 300, height: 200, borderRadius: 10, padding: 20, justifyContent: 'center', alignItems: 'center', zIndex: 9999 }}>
-            <Text style={{ fontSize: 18, marginBottom: 10,color:"gray" }}>Verify OTP</Text>
-            
+        onRequestClose={() => setModalVisible(false)}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 9999,
+          }}>
+          <View
+            style={{
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              zIndex: 9998,
+              pointerEvents: 'none',
+            }}
+          />
+          <View
+            style={{
+              backgroundColor: 'white',
+              width: 300,
+              height: 200,
+              borderRadius: 10,
+              padding: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 9999,
+            }}>
+            <Text style={{fontSize: 18, marginBottom: 10, color: 'gray'}}>
+              Verify OTP
+            </Text>
+
             <TextInput
               style={[styles.input, !isValidOtp && styles.invalidInput]}
               placeholder="Enter OTP Recieved on Email"
               placeholderTextColor="gray"
-              onChangeText={(text) => setOtpInput(text)}
+              onChangeText={text => setOtpInput(text)}
               value={otpInput}
               keyboardType="numeric"
             />
-          
-            <TouchableOpacity onPress={handleValidate} style={{ marginTop: 10 }}>
-              <Text style={{ fontSize: 16, color: 'red',  }}>Validate</Text>
+
+            <TouchableOpacity onPress={handleValidate} style={{marginTop: 10}}>
+              <Text style={{fontSize: 16, color: 'red'}}>Validate</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-   
     </>
   );
 };
 
 const styles = StyleSheet.create({
   iconLayout: {
-    overflow: "hidden",
-    width: "100%",
+    overflow: 'hidden',
+    width: '100%',
   },
   input: {
     width: '100%',
@@ -560,7 +646,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
     borderRadius: 5,
-    color:"black"
+    color: 'black',
   },
   invalidInput: {
     borderColor: 'red',
@@ -571,11 +657,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '80%',
     alignItems: 'center',
-    
   },
   eyeSlashIcon: {
-    right:"-700%",
-    top:"0%",
+    right: '-700%',
+    top: '0%',
   },
   iconLayoutN: {
     height: 18,
@@ -593,81 +678,81 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    top:"27.5%",
-    left:"2%"
+    top: '27.5%',
+    left: '2%',
   },
   radioGroup: {
     flexDirection: 'row', // Arrange items horizontally
   },
   passwordTypo: {
-    display: "flex",
+    display: 'flex',
     fontFamily: FontFamily.dGBaysan,
     lineHeight: 30,
     fontSize: FontSize.med_size,
     height: 24,
-    alignItems: "center",
+    alignItems: 'center',
     color: Color.colorDarkgray_100,
   },
   passwordN: {
     width: 92,
     height: 24,
-    alignItems: "center",
-    textAlign: "left",
-    display: "flex",
+    alignItems: 'center',
+    textAlign: 'left',
+    display: 'flex',
     fontFamily: FontFamily.dGBaysan,
-    fontWeight: "600",
+    fontWeight: '600',
     lineHeight: 30,
     fontSize: FontSize.med_size,
   },
   passwordN3: {
     width: 152,
     height: 24,
-    alignItems: "center",
-    textAlign: "left",
-    display: "flex",
+    alignItems: 'center',
+    textAlign: 'left',
+    display: 'flex',
     fontFamily: FontFamily.dGBaysan,
-    fontWeight: "600",
+    fontWeight: '600',
     lineHeight: 30,
     fontSize: FontSize.med_size,
-    left:"2%"
+    left: '2%',
   },
   passwordN2: {
     width: 92,
     height: 24,
-    alignItems: "center",
-    textAlign: "left",
-    display: "flex",
+    alignItems: 'center',
+    textAlign: 'left',
+    display: 'flex',
     fontFamily: FontFamily.dGBaysan,
-    fontWeight: "600",
+    fontWeight: '600',
     lineHeight: 30,
     fontSize: FontSize.med_size,
-    left:"100%"
+    left: '100%',
   },
   iconLayoutN: {
     height: 18,
     width: 18,
   },
   lockParentN: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   frameGroupPositionN: {
     zIndex: 1,
     left: 12,
-    flexDirection: "row",
-    position: "absolute",
+    flexDirection: 'row',
+    position: 'absolute',
   },
   frameGroupPositionN3: {
     zIndex: 1,
     left: 12,
-    flexDirection: "row",
-    position: "absolute",
+    flexDirection: 'row',
+    position: 'absolute',
   },
   frameGroupPositionN2: {
     zIndex: 1,
-    left: "100%",
-    flexDirection: "row",
-    position: "absolute",
+    left: '100%',
+    flexDirection: 'row',
+    position: 'absolute',
   },
   frameGroupN: {
     top: 3,
@@ -682,62 +767,62 @@ const styles = StyleSheet.create({
   frameGroupN2: {
     top: 3,
     zIndex: 1,
-    left:"0%",
+    left: '0%',
   },
   frameShadowBoxN: {
     zIndex: 0,
     height: 48,
-    width: "160%",
+    width: '160%',
     borderWidth: 0.3,
     borderColor: Color.praimary,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     shadowOpacity: 1,
-    left:"2%",
+    left: '2%',
     elevation: 20,
     shadowRadius: 20,
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    shadowColor: "rgba(0, 0, 0, 0.03)",
+    shadowColor: 'rgba(0, 0, 0, 0.03)',
     backgroundColor: Color.whait,
     borderRadius: Border.br_5xs,
   },
   frameShadowBoxN2: {
     zIndex: 0,
     height: 48,
-    width: "160%",
+    width: '160%',
     borderWidth: 0.3,
     borderColor: Color.praimary,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     shadowOpacity: 1,
-    left:"92%",
+    left: '92%',
     elevation: 20,
     shadowRadius: 20,
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    shadowColor: "rgba(0, 0, 0, 0.03)",
+    shadowColor: 'rgba(0, 0, 0, 0.03)',
     backgroundColor: Color.whait,
     borderRadius: Border.br_5xs,
   },
   frameShadowBoxN3: {
     zIndex: 0,
     height: 48,
-    width: "176%",
+    width: '176%',
     borderWidth: 0.3,
     borderColor: Color.praimary,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     shadowOpacity: 1,
-    left:"2%",
+    left: '2%',
     elevation: 20,
     shadowRadius: 20,
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    shadowColor: "rgba(0, 0, 0, 0.03)",
+    shadowColor: 'rgba(0, 0, 0, 0.03)',
     backgroundColor: Color.whait,
     borderRadius: Border.br_5xs,
   },
@@ -747,28 +832,28 @@ const styles = StyleSheet.create({
   groupLayout: {
     height: 48,
     width: 160,
-    left: "50%",
-    position: "absolute",
+    left: '50%',
+    position: 'absolute',
   },
   profmLogo1111Position: {
-    left: "50%",
-    position: "absolute",
+    left: '50%',
+    position: 'absolute',
   },
   parentPosition: {
     zIndex: 1,
     top: 14,
-    justifyContent: "center",
+    justifyContent: 'center',
     height: 20,
-    alignItems: "center",
-    flexDirection: "row",
-    position: "absolute",
+    alignItems: 'center',
+    flexDirection: 'row',
+    position: 'absolute',
   },
   lineViewBorder: {
     opacity: 0.7,
     height: 1,
     borderTopWidth: 0.5,
     borderColor: Color.a6A6A6,
-    borderStyle: "solid",
+    borderStyle: 'solid',
   },
   groupIconLayout: {
     height: 60,
@@ -780,22 +865,22 @@ const styles = StyleSheet.create({
     height: 99,
     elevation: 20,
     shadowRadius: 20,
-    shadowColor: "rgba(0, 0, 0, 0.2)",
+    shadowColor: 'rgba(0, 0, 0, 0.2)',
     backgroundColor: Color.whait,
     shadowOpacity: 1,
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    width: "100%",
+    width: '100%',
     left: 0,
-    position: "absolute",
+    position: 'absolute',
   },
   groupItem: {
-    marginLeft: "-60%",
+    marginLeft: '-60%',
     borderRadius: Border.br_mini,
     backgroundColor: Color.colorAliceblue_100,
-    shadowColor: "rgba(0, 0, 0, 0.08)",
+    shadowColor: 'rgba(0, 0, 0, 0.08)',
     shadowRadius: 10,
     elevation: 10,
     shadowOpacity: 1,
@@ -808,77 +893,77 @@ const styles = StyleSheet.create({
   },
   profmLogo1111: {
     marginLeft: -50,
-    top: "10%",
+    top: '10%',
     width: 100,
-    height: 36,
+    height: 41,
   },
   rectangleGroup: {
-    marginLeft: "-15%",
-    top: "60%",
+    marginLeft: '-15%',
+    top: '60%',
   },
   icon: {
-    height: "100%",
+    height: '100%',
   },
   arrow21: {
-    top: "40%",
+    top: '40%',
     width: 24,
     height: 24,
-    left: "5%",
-    position: "absolute",
+    left: '5%',
+    position: 'absolute',
   },
   signUp1: {
     marginLeft: -27.5,
-    top: "27%",
+    top: '27%',
     fontSize: FontSize.size_base,
-    fontWeight: "700",
-    textAlign: "center",
+    fontWeight: '700',
+    textAlign: 'center',
     color: Color.praimary,
     fontFamily: FontFamily.dGBaysan,
     lineHeight: 30,
-    left: "50%",
-    position: "absolute",
+    left: '50%',
+    position: 'absolute',
   },
   rectangleParent: {
     height: 124,
-    width: "100%",
+    width: '100%',
     left: 0,
     top: 0,
-    position: "absolute",
+    position: 'absolute',
   },
   frameGroup: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   mobile: {
-    fontWeight: "600",
+    fontWeight: '600',
     color: Color.grayBlack,
-    textAlign: "left",
+    textAlign: 'left',
     width: 83,
-    alignItems: "center",
-    display: "flex",
+    alignItems: 'center',
+    display: 'flex',
     fontSize: FontSize.med_size,
     fontFamily: FontFamily.dGBaysan,
     lineHeight: 30,
     height: 24,
-    left:"5%"
+    left: '5%',
   },
   mobile: {
-    fontWeight: "600",
+    fontWeight: '600',
     color: Color.grayBlack,
-    textAlign: "left",
+    textAlign: 'left',
     width: 83,
-    alignItems: "center",
-    display: "flex",
+    alignItems: 'center',
+    display: 'flex',
     fontSize: FontSize.med_size,
     fontFamily: FontFamily.dGBaysan,
     lineHeight: 30,
     height: 24,
-    left:"5%"
+    left: '5%',
   },
   frameShadowBox: {
     zIndex: 0,
     borderWidth: 0.3,
     borderColor: Color.praimary,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderRadius: Border.br_5xs,
     width: 343,
     height: 48,
@@ -889,26 +974,26 @@ const styles = StyleSheet.create({
       width: 0,
       height: 4,
     },
-    shadowColor: "rgba(0, 0, 0, 0.03)",
+    shadowColor: 'rgba(0, 0, 0, 0.03)',
     backgroundColor: Color.whait,
   },
   frameShadowBoxName: {
     zIndex: 0,
     borderWidth: 0.3,
     borderColor: Color.praimary,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderRadius: Border.br_5xs,
     width: 160,
     height: 48,
     shadowOpacity: 1,
     elevation: 20,
     shadowRadius: 20,
-    marginLeft:"3%",
+    marginLeft: '3%',
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    shadowColor: "rgba(0, 0, 0, 0.03)",
+    shadowColor: 'rgba(0, 0, 0, 0.03)',
     backgroundColor: Color.whait,
   },
   vuesaxoutlinecallIcon: {
@@ -919,11 +1004,11 @@ const styles = StyleSheet.create({
     color: Color.black,
     marginLeft: 8,
     fontSize: FontSize.med_size,
-    textAlign: "center",
+    textAlign: 'center',
     fontFamily: FontFamily.dGBaysan,
   },
   vuesaxoutlinecallParent: {
-    left: "10%",
+    left: '10%',
   },
   rectangleContainer: {
     marginTop: 4,
@@ -939,22 +1024,22 @@ const styles = StyleSheet.create({
     left: 11,
   },
   frameParent: {
-    top: "15%",
-    left: "5%",
-    position: "absolute",
+    top: '15%',
+    left: '5%',
+    position: 'absolute',
   },
   frameInner: {
     width: 121,
   },
   orSignUp: {
     fontSize: FontSize.size_sm,
-    fontWeight: "300",
+    fontWeight: '300',
     width: 93,
     height: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    display: "flex",
-    textAlign: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    textAlign: 'center',
     color: Color.praimary,
     fontFamily: FontFamily.dGBaysan,
     lineHeight: 30,
@@ -963,22 +1048,22 @@ const styles = StyleSheet.create({
     width: 120,
   },
   lineParent: {
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     width: 343,
-    alignItems: "center",
-    flexDirection: "row",
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   frameChild1: {
     marginLeft: 40,
   },
   groupParent: {
     marginTop: 24,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   frameContainer: {
     marginLeft: -171.5,
     top: 680,
-    alignItems: "center",
+    alignItems: 'center',
   },
   signUp: {
     backgroundColor: Color.colorGray_100,

@@ -57,9 +57,9 @@ const Notifications = () => {
       </View>
       
       <View style={{top:"19%",flexDirection:"row"}}>
-      <Text>You have</Text>
+      <Text style={{color:"gray"}}>You have</Text>
       <Text style={{color:"#006daa"}}>( {notifications.length})</Text>
-      <Text> notification Today</Text>
+      <Text style={{color:"gray"}}> notification Today</Text>
       </View>
      
       <View style={{top:"10%"}}>

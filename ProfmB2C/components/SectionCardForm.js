@@ -107,9 +107,9 @@ const styles = StyleSheet.create({
   },
   profmLogo1111: {
     marginLeft: -50,
-    top: 7,
+    top: 1,
     width: 105,
-    height: 36,
+    height: 43,
     left: "50%",
     position: "absolute",
   },

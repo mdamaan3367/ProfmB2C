@@ -1,8 +1,8 @@
-import { Alert, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import Splash from './screens/Splash'
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {Alert, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import Splash from './screens/Splash';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Splash1 from './screens/Splash1';
 import LogIn from './screens/LogIn';
 import Home from './components/Home';
@@ -36,225 +36,272 @@ import Orders from './screens/Orders';
 import AboutApp from './screens/AboutApp';
 import Menu1 from './screens/Menu1';
 import messaging from '@react-native-firebase/messaging';
-import { Provider } from 'react-redux';
-import store, { persistor } from './redux/store';
+import {Provider} from 'react-redux';
+import store, {persistor} from './redux/store';
 import NotificationScreen from './redux/NotificationScreen';
-import { addNotification } from './redux/notificationSlice';
-import { PersistGate } from 'redux-persist/integration/react';
+import {addNotification} from './redux/notificationSlice';
+import {PersistGate} from 'redux-persist/integration/react';
+import OnBordeing5 from './screens/OnBordeing5';
+import OnBordeing6 from './screens/OnBordeing6';
+import OnBordeing7 from './screens/OnBordeing7';
+import OnBordeing8 from './screens/OnBordeing8';
+import RegularCleaning from './components/RegularCleaning';
+import ServiceDetails96 from './screens/ServiceDetails96';
+import ViewDetails2 from './components/ViewDetails2';
 
 const Stack = createNativeStackNavigator();
 const App = () => {
-
   //pushed
- useEffect(() => {
-  const unsubscribe = messaging().onMessage(async remoteMessage => {
-    console.log(remoteMessage.notification)
-    Alert.alert(remoteMessage.notification?.title, remoteMessage.notification?.body);
-  });
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log(remoteMessage.notification);
+      Alert.alert(
+        remoteMessage.notification?.title,
+        remoteMessage.notification?.body,
+      );
+    });
 
-  return unsubscribe;
-}, []);
-//-----------
-useEffect(() => {
-  const unsubscribeForeground = messaging().onMessage(async (remoteMessage) => {
-    const { title, body } = remoteMessage.notification;
-    const notificationText = `${title}: ${body}`;
-    store.dispatch(addNotification(notificationText));
-  });
+    return unsubscribe;
+  }, []);
+  //-----------
+  useEffect(() => {
+    const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
+      const {title, body} = remoteMessage.notification;
+      const notificationText = `${title}: ${body}`;
+      store.dispatch(addNotification(notificationText));
+    });
 
-  const unsubscribeBackground = messaging().onNotificationOpenedApp(remoteMessage => {
-    const { title, body } = remoteMessage.notification;
-    const notificationText = `${title}: ${body}`;
-    store.dispatch(addNotification(notificationText));
-  });
+    const unsubscribeBackground = messaging().onNotificationOpenedApp(
+      remoteMessage => {
+        const {title, body} = remoteMessage.notification;
+        const notificationText = `${title}: ${body}`;
+        store.dispatch(addNotification(notificationText));
+      },
+    );
 
-  return () => {
-    unsubscribeForeground();
-    unsubscribeBackground();
-  };
-}, []);
-//pushed
- 
+    return () => {
+      unsubscribeForeground();
+      unsubscribeBackground();
+    };
+  }, []);
+  //pushed
+
   return (
     <Provider store={store}>
-     <PersistGate loading={null} persistor={persistor}>
-    <NavigationContainer>
-       <Stack.Navigator screenOptions={{ headerShown: false }}>
-       <Stack.Screen
+      <PersistGate loading={null} persistor={persistor}>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Screen
               name="Splash"
               component={Splash}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="Splash1"
               component={Splash1}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
-             <Stack.Screen
+            <Stack.Screen
               name="LogIn"
               component={LogIn}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="Home"
               component={Home}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="SignUp"
               component={SignUp}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="Forget"
               component={Forget}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="Notifications"
               component={Notifications}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
-             <Stack.Screen
+            <Stack.Screen
               name="Onbordeing"
               component={OnBordeing}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="Onbordeing2"
               component={OnBordeing2}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="Onbordeing3"
               component={OnBordeing3}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
-             <Stack.Screen
+            <Stack.Screen
               name="Onbordeing4"
               component={OnBordeing4}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="OnbordingCarousel"
               component={OnbordingCarousel}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="Bottom"
               component={Bottom}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="Bookings"
               component={Bookings}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
-             <Stack.Screen
+            <Stack.Screen
               name="Profile"
               component={Profile}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="Menu"
               component={Menu}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="DiscountCarousal"
               component={DiscountCarousal}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
-             <Stack.Screen
+            <Stack.Screen
               name="OneTimeService"
               component={OneTimeService}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="HospitalityServices"
               component={HospitalityServices}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
-             <Stack.Screen
+            <Stack.Screen
               name="PoolMaintenance"
               component={PoolMaintenance}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="ElectricalWorks"
               component={ElectricalWorks}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="SanitaryPlumbing"
               component={SanitaryPlumbing}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="HVAC"
               component={HVAC}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="PestControl"
               component={PestControl}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="LANDSCAPING"
               component={LANDSCAPING}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="CarpentryWork"
               component={CarpentryWork}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="Profile1"
               component={Profile1}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="ChangePassword"
               component={ChangePassword}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
-            
+
             <Stack.Screen
               name="Invoices"
               component={Invoices}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="MyAddresses"
               component={MyAddresses}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
-             <Stack.Screen
+            <Stack.Screen
               name="Orders"
               component={Orders}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="AboutApp"
               component={AboutApp}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="Menu1"
               component={Menu1}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
-             <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
-         </Stack.Navigator>
+            <Stack.Screen
+              name="OnBordeing5"
+              component={OnBordeing5}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="OnBordeing6"
+              component={OnBordeing6}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="OnBordeing7"
+              component={OnBordeing7}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="OnBordeing8"
+              component={OnBordeing8}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="RegularCleaning"
+              component={RegularCleaning}
+              options={{headerShown: false}}
+            />
 
-    </NavigationContainer>
-    </PersistGate>
+            <Stack.Screen
+              name="NotificationScreen"
+              component={NotificationScreen}
+            />
+             <Stack.Screen
+              name="ServiceDetails96"
+              component={ServiceDetails96}
+            />
+            <Stack.Screen
+              name="ViewDetails2"
+              component={ViewDetails2}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PersistGate>
     </Provider>
-  )
-}
+  );
+};
 
-export default App
+export default App;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

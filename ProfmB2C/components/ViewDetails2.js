@@ -1,14 +1,21 @@
-import React, { useState, useCallback } from "react";
-import { View, StyleSheet, Text, Image, Pressable, Modal } from "react-native";
+import React, { useState, useCallback,useEffect } from "react";
+import { View, StyleSheet, Text, Image, Pressable, Modal, ScrollView, Dimensions } from "react-native";
 import RegularCleaning from "./RegularCleaning";
 import { useNavigation } from "@react-navigation/native";
 import WebViewBottom from "./WebViewBottom";
 import { FontFamily, Color, FontSize, Border, Padding } from "../GlobalStyles";
+import FooterBottom from "../screens/FooterBottom";
 
-const ViewDetails2 = ({ onClose }) => {
+
+const windowHeight = Dimensions.get('window').height;
+  const windowWidth = Dimensions.get('window').width;
+
+
+const ViewDetails2 = ({ onClose ,route }) => {
   const [groupContainerVisible, setGroupContainerVisible] = useState(false);
   const [frameContainer33Visible, setFrameContainer33Visible] = useState(false);
   const navigation = useNavigation();
+  const { childItem } = route.params;
 
   const openGroupContainer = useCallback(() => {
     setGroupContainerVisible(true);
@@ -26,17 +33,40 @@ const ViewDetails2 = ({ onClose }) => {
     setFrameContainer33Visible(false);
   }, []);
 
+
+   const [progress, setProgress] = useState(0);
+  const targetPercentage = 50; 
+
+  useEffect(() => {
+    let interval;
+
+    if (progress < targetPercentage) {
+      interval = setInterval(() => {
+        setProgress((prevProgress) => {
+          const newProgress = prevProgress + 1;
+          return newProgress > targetPercentage ? targetPercentage : newProgress;
+        });
+      }, 50); // Adjust the interval duration as needed
+    }
+
+    return () => clearInterval(interval);
+  }, [progress, targetPercentage]);
+
+
+
   return (
     <>
-      <View style={styles.viewDetails}>
+    <ScrollView>
+      <View style={[styles.viewDetails,{height:windowHeight+585,width:windowWidth}]}>
         <View style={styles.viewDetailsChild} />
+      
         <View style={[styles.lineParent, styles.navParentPosition]}>
           <View style={styles.frameChild} />
           <View style={styles.frameWrapper}>
             <View style={[styles.frameParent, styles.parentPosition1]}>
               <View>
                 <Text style={[styles.cleaningFor2, styles.textTypo]}>
-                  Cleaning for 2 hours
+                {childItem.serviceShortDescAr}
                 </Text>
                 <View style={styles.userParent}>
                   <Image
@@ -45,17 +75,17 @@ const ViewDetails2 = ({ onClose }) => {
                     source={require("../assets/user3.png")}
                   />
                   <Text style={[styles.domesticWorker, styles.reviewClr]}>
-                    1 domestic worker
+                  {childItem.serviceDetailsAr}
                   </Text>
                 </View>
                 <View style={styles.userParent}>
                   <Text style={[styles.sar, styles.sarTypo]}>
-                    <Text style={styles.sar1}>{`79 SAR `}</Text>
-                    <Text style={styles.text}>{` `}</Text>
+                    <Text style={styles.sar1}>{childItem.offerPrice} SAR</Text>
+                   
                   </Text>
                   <Text style={[styles.sar2, styles.sar2Typo]}>
                     <Text style={styles.sarTxt}>
-                      <Text style={styles.sar1}>{`100 SAR `}</Text>
+                      <Text style={[styles.sar1,{textDecorationLine: 'line-through'}]}>{childItem.offerPrice * 1.1} SAR</Text>
                       <Text style={styles.text}>{` `}</Text>
                     </Text>
                   </Text>
@@ -74,7 +104,7 @@ const ViewDetails2 = ({ onClose }) => {
                 </View>
                 <Pressable
                   style={[styles.rectangleParent, styles.groupChildLayout]}
-                  onPress={openGroupContainer}
+                 // onPress={openGroupContainer}
                 >
                   <View style={[styles.groupChild, styles.groupChildLayout]} />
                   <Text style={[styles.bookNow, styles.bookNowPosition]}>
@@ -254,83 +284,33 @@ const ViewDetails2 = ({ onClose }) => {
                 <View style={styles.vectorParent}>
                   <Text style={[styles.score1, styles.scoreFlexBox]}>5</Text>
                 </View>
-                <View style={styles.starGroup}>
-                  <Image
-                    style={styles.starIconLayout}
-                    resizeMode="cover"
-                    source={require("../assets/star.png")}
-                  />
-                  <Image
-                    style={[styles.starIcon1, styles.starIconLayout]}
-                    resizeMode="cover"
-                    source={require("../assets/star.png")}
-                  />
-                  <Image
-                    style={[styles.starIcon1, styles.starIconLayout]}
-                    resizeMode="cover"
-                    source={require("../assets/star.png")}
-                  />
-                  <Image
-                    style={[styles.starIcon1, styles.starIconLayout]}
-                    resizeMode="cover"
-                    source={require("../assets/star.png")}
-                  />
-                  <Image
-                    style={[styles.starIcon1, styles.starIconLayout]}
-                    resizeMode="cover"
-                    source={require("../assets/star.png")}
-                  />
-                </View>
+               
                 <View style={styles.ratingBar}>
                   <View style={[styles.snakebar, styles.snakebarPosition1]} />
                 </View>
-                <Text style={[styles.score2, styles.scoreFlexBox]}>(5)</Text>
                 <Image
                   style={[styles.starIcon5, styles.starIconLayout]}
                   resizeMode="cover"
                   source={require("../assets/star1.png")}
                 />
+                
+                <Text style={[styles.score2, styles.scoreFlexBox]}>(5)</Text>
+              
               </View>
               <View style={[styles.ratings1, styles.ratingsFlexBox]}>
                 <View style={styles.vectorParent}>
                   <Text style={[styles.score1, styles.scoreFlexBox]}>4</Text>
                 </View>
-                <View style={styles.starGroup}>
-                  <Image
-                    style={styles.starIconLayout}
-                    resizeMode="cover"
-                    source={require("../assets/star.png")}
-                  />
-                  <Image
-                    style={[styles.starIcon1, styles.starIconLayout]}
-                    resizeMode="cover"
-                    source={require("../assets/star.png")}
-                  />
-                  <Image
-                    style={[styles.starIcon1, styles.starIconLayout]}
-                    resizeMode="cover"
-                    source={require("../assets/star.png")}
-                  />
-                  <Image
-                    style={[styles.starIcon1, styles.starIconLayout]}
-                    resizeMode="cover"
-                    source={require("../assets/star.png")}
-                  />
-                  <Image
-                    style={[styles.starIcon1, styles.starIconLayout]}
-                    resizeMode="cover"
-                    source={require("../assets/star.png")}
-                  />
-                </View>
+             
                 <View style={styles.ratingBar}>
                   <View style={styles.ratingBar2}>
                     <View
                       style={[styles.snakebar1, styles.snakebarPosition1]}
                     />
                   </View>
-                  <View style={[styles.snakebar2, styles.snakebarPosition]} />
+                  <View style={[styles.snakebar2, styles.snakebarPosition4]} />
                 </View>
-                <Text style={[styles.score2, styles.scoreFlexBox]}>(5)</Text>
+               
                 <Image
                   style={[styles.starIcon5, styles.starIconLayout]}
                   resizeMode="cover"
@@ -374,7 +354,7 @@ const ViewDetails2 = ({ onClose }) => {
                       style={[styles.snakebar1, styles.snakebarPosition1]}
                     />
                   </View>
-                  <View style={[styles.snakebar4, styles.snakebarPosition]} />
+                  <View style={[styles.snakebar4, styles.snakebarPosition3]} />
                 </View>
                 <Text style={[styles.score2, styles.scoreFlexBox]}>(5)</Text>
                 <Image
@@ -420,7 +400,7 @@ const ViewDetails2 = ({ onClose }) => {
                       style={[styles.snakebar1, styles.snakebarPosition1]}
                     />
                   </View>
-                  <View style={[styles.snakebar6, styles.snakebarPosition]} />
+                  <View style={[styles.snakebar6, styles.snakebarPosition2]} />
                 </View>
                 <Text style={[styles.score2, styles.scoreFlexBox]}>(5)</Text>
                 <Image
@@ -466,7 +446,7 @@ const ViewDetails2 = ({ onClose }) => {
                       style={[styles.snakebar1, styles.snakebarPosition1]}
                     />
                   </View>
-                  <View style={[styles.snakebar8, styles.snakebarPosition]} />
+                  <View style={[styles.snakebar8, styles.snakebarPosition1N]} />
                 </View>
                 <Text style={[styles.score2, styles.scoreFlexBox]}>(5)</Text>
                 <Image
@@ -520,7 +500,7 @@ const ViewDetails2 = ({ onClose }) => {
                   <Image
                     style={styles.logoIcon}
                     resizeMode="cover"
-                    source={require("../assets/logo1.png")}
+                    source={require("../assets/Courtney.png")}
                   />
                   <View style={styles.text5}>
                     <Text style={[styles.courtneyHenry, styles.minsAgoTypo]}>
@@ -570,85 +550,7 @@ const ViewDetails2 = ({ onClose }) => {
             </View>
           </View>
         </View>
-        <View style={[styles.navBarParent, styles.navParentPosition]}>
-          <View style={[styles.navBar, styles.navFlexBox]}>
-            <Pressable
-              style={[styles.navBarInner, styles.navFlexBox]}
-              onPress={() => navigation.navigate("Home1")}
-            >
-              <View style={styles.parentSpaceBlock}>
-                <Image
-                  style={styles.arrow21}
-                  resizeMode="cover"
-                  source={require("../assets/home23.png")}
-                />
-                <Text style={[styles.home, styles.sar2Typo]}>Home</Text>
-              </View>
-            </Pressable>
-            <View style={[styles.navBarChild, styles.navBarChildLayout]}>
-              <View style={styles.clockParent}>
-                <Image
-                  style={styles.arrow21}
-                  resizeMode="cover"
-                  source={require("../assets/clock3.png")}
-                />
-                <Text style={[styles.history, styles.sar2Typo]}>History</Text>
-              </View>
-            </View>
-            <Pressable
-              style={styles.navBarChildLayout}
-              onPress={() => navigation.navigate("Bookings2")}
-            >
-              <View style={styles.calendarTickParent}>
-                <Image
-                  style={styles.arrow21}
-                  resizeMode="cover"
-                  source={require("../assets/calendartick4.png")}
-                />
-                <Text style={[styles.bookings, styles.sar2Typo]}>bookings</Text>
-              </View>
-            </Pressable>
-            <Pressable
-              style={styles.navBarChildLayout}
-              onPress={openFrameContainer33}
-            >
-              <View style={styles.clockParent}>
-                <Image
-                  style={styles.arrow21}
-                  resizeMode="cover"
-                  source={require("../assets/vuesaxlinearuser.png")}
-                />
-                <Text style={[styles.bookings, styles.sar2Typo]}>account</Text>
-              </View>
-            </Pressable>
-            <Pressable
-              style={styles.navBarChildLayout}
-              onPress={() => navigation.navigate("Menu2")}
-            >
-              <View
-                style={[styles.textalignLeftParent, styles.parentSpaceBlock]}
-              >
-                <Image
-                  style={styles.arrow21}
-                  resizeMode="cover"
-                  source={require("../assets/textalignleft.png")}
-                />
-                <Text style={[styles.home, styles.sar2Typo]}>Menu</Text>
-              </View>
-            </Pressable>
-          </View>
-          <WebViewBottom
-            webViewBottomPosition="absolute"
-            webViewBottomBackgroundColor="#fff"
-            webViewBottomMarginLeft={-187.5}
-            webViewBottomTop={56}
-            webViewBottomLeft="50%"
-            webViewBottomWidth={375}
-            webViewBottomHeight={34}
-            webViewBottomBottom="unset"
-            homeIndicatorBackgroundColor="#1d2939"
-          />
-        </View>
+      
       </View>
 
       <Modal animationType="fade" transparent visible={groupContainerVisible}>
@@ -670,19 +572,20 @@ const ViewDetails2 = ({ onClose }) => {
           <RegularCleaning onClose={closeFrameContainer33} />
         </View>
       </Modal>
+      </ScrollView>
+      <FooterBottom />
     </>
   );
 };
 
 const styles = StyleSheet.create({
   navParentPosition: {
-    marginLeft: -187.5,
-    left: "50%",
-    width: 375,
+    left: "0%",
+    width: "100%",
   },
   parentPosition1: {
-    top: 24,
-    left: 16,
+    top: "1%",
+    left: "4%",
     position: "absolute",
   },
   textTypo: {
@@ -691,7 +594,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   reviewClr: {
-    color: Color.grayBlack,
+    color: "gray",
     fontWeight: "300",
   },
   sarTypo: {
@@ -724,7 +627,7 @@ const styles = StyleSheet.create({
   },
   iconPosition: {
     width: 50,
-    left: 9,
+    left: "6%",
     position: "absolute",
   },
   groupLayout: {
@@ -749,7 +652,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   broomAndDustpanLayout: {
-    width: 127,
+    width: "100%",
     color: Color.praimary,
     fontWeight: "300",
     lineHeight: 16,
@@ -767,43 +670,88 @@ const styles = StyleSheet.create({
   },
   snakebarPosition1: {
     borderRadius: Border.br_11xs,
-    left: "0%",
+    left: 152,
     bottom: "0%",
     right: "0%",
     top: "0%",
     height: "100%",
-    width: "100%",
+    width: 200,
     position: "absolute",
   },
   ratingsFlexBox: {
-    width: 251,
+    width: "100%",
     alignItems: "center",
     flexDirection: "row",
   },
   snakebarPosition: {
     borderBottomLeftRadius: Border.br_11xs,
     borderTopLeftRadius: Border.br_11xs,
-    left: "0%",
+    left: 152,
     bottom: "0%",
     top: "0%",
-    height: "100%",
+    height: 8,
+    width:200,
     backgroundColor: Color.praimary,
     position: "absolute",
   },
+  snakebarPosition4: {
+    borderBottomLeftRadius: Border.br_11xs,
+    borderTopLeftRadius: Border.br_11xs,
+    left: 152,
+    bottom: "0%",
+    top: "0%",
+    height: 8,
+    width:160,
+    backgroundColor: Color.praimary,
+    position: "absolute",
+  },
+  snakebarPosition3: {
+    borderBottomLeftRadius: Border.br_11xs,
+    borderTopLeftRadius: Border.br_11xs,
+    left: 152,
+    bottom: "0%",
+    top: "0%",
+    height: 8,
+    width:120,
+    backgroundColor: Color.praimary,
+    position: "absolute",
+  },
+  snakebarPosition2: {
+    borderBottomLeftRadius: Border.br_11xs,
+    borderTopLeftRadius: Border.br_11xs,
+    left: 152,
+    bottom: "0%",
+    top: "0%",
+    height: 8,
+    width:80,
+    backgroundColor: Color.praimary,
+    position: "absolute",
+  },
+  snakebarPosition1N: {
+    borderBottomLeftRadius: Border.br_11xs,
+    borderTopLeftRadius: Border.br_11xs,
+    left: 152,
+    bottom: "0%",
+    top: "0%",
+    height: 8,
+    width:40,
+    backgroundColor: Color.praimary,
+    position: "absolute",
+  },
+
   framePosition: {
-    marginLeft: -187.7,
     height: 1,
-    width: 376,
+    width: "100%",
     borderTopWidth: 0.5,
     borderColor: Color.a6A6A6,
     borderStyle: "solid",
-    left: "50%",
+    left: "0%",
     position: "absolute",
   },
   rowPosition: {
     justifyContent: "flex-end",
-    width: 343,
-    left: 16,
+    width: "100%",
+    left: "4%",
     position: "absolute",
   },
   minsAgoTypo: {
@@ -815,7 +763,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     position: "absolute",
-    width: 375,
+    width: "100%",
   },
   navFlexBox: {
     height: 56,
@@ -836,9 +784,9 @@ const styles = StyleSheet.create({
   },
   viewDetailsChild: {
     top: 47,
-    backgroundColor: Color.a6A6A6,
-    height: 719,
-    width: 343,
+    backgroundColor:"#a6a6a6",
+    height: "100%",
+    width: "100%",
     borderTopRightRadius: Border.br_mini,
     borderTopLeftRadius: Border.br_mini,
     left: 16,
@@ -846,7 +794,7 @@ const styles = StyleSheet.create({
   },
   frameChild: {
     height: 1,
-    width: 376,
+    width: "100%",
     borderTopWidth: 0.5,
     borderColor: Color.a6A6A6,
     borderStyle: "solid",
@@ -856,9 +804,9 @@ const styles = StyleSheet.create({
   },
   cleaningFor2: {
     width: 154,
-    height: 16,
+    height: 18,
     textAlign: "left",
-    color: Color.black,
+    color: "black",
     fontWeight: "600",
     fontSize: FontSize.size_sm,
   },
@@ -869,7 +817,7 @@ const styles = StyleSheet.create({
   domesticWorker: {
     width: 100,
     marginLeft: 9,
-    lineHeight: 16,
+    lineHeight: 17,
     fontSize: FontSize.med_size,
     height: 16,
     textAlign: "left",
@@ -881,7 +829,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   sar1: {
-    textTransform: "capitalize",
   },
   text: {
     textTransform: "lowercase",
@@ -966,25 +913,24 @@ const styles = StyleSheet.create({
     height: 115,
     backgroundColor: Color.whait,
     top: 59,
-    left: "50%",
-    marginLeft: -187.5,
+    left: "-2%",
     position: "absolute",
     overflow: "hidden",
-    width: 375,
+    width: "100%",
   },
   equipmentUsed: {
     width: 149,
     textTransform: "capitalize",
-    height: 16,
+    height: 18,
     textAlign: "left",
-    color: Color.black,
+    color:"black",
     fontWeight: "600",
     fontSize: FontSize.size_sm,
   },
   cleaningWithSpecializedContainer: {
     width: 223,
     marginTop: 4,
-    lineHeight: 30,
+    lineHeight: 18,
     fontSize: FontSize.med_size,
     height: 16,
     display: "flex",
@@ -1014,12 +960,13 @@ const styles = StyleSheet.create({
     left: 0,
   },
   vacuumCleaner: {
-    width: 109,
-    fontWeight: "300",
-    lineHeight: 16,
+    width: "100%",
+    fontWeight: "600",
+    lineHeight: 18,
     fontSize: FontSize.med_size,
     height: 16,
     textAlign: "left",
+    fontSize:14
   },
   itCleansCarpets: {
     lineHeight: 18,
@@ -1074,11 +1021,11 @@ const styles = StyleSheet.create({
     height: 26,
   },
   floorCleaningCloths: {
-    fontSize: FontSize.med_size,
+    fontSize: 14,
   },
   frameView: {
-    top: 84,
-    left: 16,
+    top: "12%",
+    left: "4%",
     position: "absolute",
   },
   frameContainer: {
@@ -1092,15 +1039,15 @@ const styles = StyleSheet.create({
   text2: {
     width: 24,
     marginLeft: 4,
-    height: 16,
+    height: 18,
     textAlign: "left",
-    color: Color.black,
+    color:"black",
     fontWeight: "600",
     fontSize: FontSize.size_sm,
   },
   review1: {
     marginTop: 4,
-    color: Color.grayBlack,
+    color: "gray",
     fontWeight: "300",
     fontSize: FontSize.med_size,
     fontFamily: FontFamily.dGBaysan,
@@ -1139,7 +1086,7 @@ const styles = StyleSheet.create({
   ratingBar: {
     height: 8,
     flex: 1,
-    marginLeft: 8,
+    left:-120
   },
   score2: {
     lineHeight: 20,
@@ -1151,6 +1098,7 @@ const styles = StyleSheet.create({
   },
   starIcon5: {
     marginLeft: 8,
+    left:"1500%"
   },
   snakebar1: {
     backgroundColor: Color.colorGainsboro_100,
@@ -1184,10 +1132,10 @@ const styles = StyleSheet.create({
     right: "80%",
   },
   frameItem: {
-    top: 241,
+    top: "35%",
   },
   frameInner: {
-    top: 427,
+    top: "61%",
   },
   logoIcon: {
     width: 38,
@@ -1196,7 +1144,7 @@ const styles = StyleSheet.create({
   courtneyHenry: {
     alignSelf: "stretch",
     textAlign: "left",
-    color: Color.black,
+    color: "black",
     fontWeight: "600",
     fontSize: FontSize.size_sm,
   },
@@ -1239,7 +1187,7 @@ const styles = StyleSheet.create({
   },
   iAmVery: {
     letterSpacing: 0.4,
-    width: 309,
+    width: "93%",
     marginTop: 12,
     lineHeight: 18,
     fontSize: FontSize.med_size,
@@ -1254,13 +1202,13 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   row2: {
-    top: 451,
+    top: "63%",
   },
   frameParent1: {
-    top: 642,
-    height: 587,
+    top: "52%",
+    height: 697,
     backgroundColor: Color.whait,
-    left: "50%",
+    left: "0%",
     position: "absolute",
     overflow: "hidden",
   },
@@ -1280,7 +1228,7 @@ const styles = StyleSheet.create({
     width: 24,
   },
   viewDetails1: {
-    marginLeft: 102,
+    left:"300%",
     lineHeight: 30,
     textAlign: "center",
     textTransform: "capitalize",
@@ -1290,16 +1238,16 @@ const styles = StyleSheet.create({
   arrow21Parent: {
     alignItems: "center",
     flexDirection: "row",
-    left: 16,
+    left: "4%",
   },
   lineParent: {
-    bottom: 90,
     backgroundColor: Color.colorGray_100,
-    height: 664,
+    height: "100%",
     left: "50%",
     borderTopRightRadius: Border.br_mini,
     borderTopLeftRadius: Border.br_mini,
     position: "absolute",
+    marginTop:10
   },
   home: {
     marginTop: 4,
@@ -1365,12 +1313,9 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   viewDetails: {
-    backgroundColor: Color.colorBlack,
-    height: 812,
-    maxWidth: "100%",
-    maxHeight: "100%",
+    backgroundColor: "#a6a6a6",
     overflow: "hidden",
-    width: 375,
+   
   },
 });
 
