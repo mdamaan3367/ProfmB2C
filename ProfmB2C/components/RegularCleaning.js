@@ -122,7 +122,7 @@ windowHeight+additionalButtonsHeight ;
               <View style={{marginTop:15,margin:5,flexDirection:"row"}}>
                 <Text style={{color:"black",fontSize:15}}>{childItem.serviceShortDescAr}  </Text>
                 <Text style={{color:"gray",fontSize:13,alignSelf:"center"}}>({item.actName})</Text>
-                <Text style={{color:"gray",fontSize:12,alignSelf:"center",marginLeft:"1.5%"}}>⭐4.9 (80 reviews)</Text>
+                <Text style={{color:"gray",fontSize:12,alignSelf:"center",marginLeft:"1.5%"}}>⭐ 4.9 (80 reviews)</Text>
               </View>
               <View style={{flexDirection:"row",margin:5}}>
               <Image
